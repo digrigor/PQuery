@@ -13,12 +13,13 @@ Users can efficiently filter all columns in both modes by using a customisable f
 # Getting Started
 
 ## Execute PQuery
-From a linux machine:
+- From a linux machine:
 ```
 sh run_app.sh
 ```
 
-From a Windows machine:  
+- From a Windows machine:  
 Double-click the PQuery.bat file or the PQuery.lnk shortcup (you can copy the shortcut to your Desktop).
 
-
+## How to Guide
+Read more in the [PQuery Manual](./PQuery_Manual.pdf)
