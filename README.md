@@ -32,4 +32,6 @@ Check the preprocessing directory.
 
 To do:
 - Update the DB with the latest hg38 data.
-- Update the back-end DB so can be faster. This scheme used right now (VCFdbR) is currently slow for querying whole exome for many samples. The major limitation is the time needed to calculate on-the-fly AC,AN and AF (Allele Count, Allele Number, Allele Frequency) for the queried cohort of samples and then filter these numbers to only include variants which have at least ONE alternative allele in at least ONE queried sample-set.
+- Update the back-end DB so can be faster. This scheme used right now (VCFdbR) is currently slow for querying whole exome for many samples. The major limitation is the time needed to calculate on-the-fly AC,AN and AF (Allele Count, Allele Number, Allele Frequency) for the queried cohort of samples and then filter these numbers to only include variants which have at least ONE alternative allele in at least ONE queried sample-set. Using NOSQL db management or GATK GenomicDBI might be good solutions.
+
+# PQuery Architecture
