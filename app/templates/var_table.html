@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<div class = "container">
+    <div class="row text-center justify-content-center">
+        <input type="button" onClick="window.open('/igv');" value="Inspect IGV" style="float: right;">
+        <h4 style="text-align:center">Filtering Pane</h4>
+        <div class="col-12">
+            <p>Select the Columns you would like to filter:</p>
+            <select id="shipping_selector" name="filter_selector">
+                <option value="SELECT">Select Columns...</option>
+                {% for entry in divs %}
+                <option value={{ entry["value"] }}>{{ entry ["id"] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <form action="/var_table" method="POST" enctype="multipart/form-data">
+        {% for entry in divs %}
+            {% if entry["type"]=="text" %}
+            <div class="form-group" style="display:none" id={{ entry["div_id"] }}>
+              {{ entry["id"] }}
+              <input type="text" id={{ entry["id"] }} name={{ entry["id"] }}>
+            </div>
+            {% endif %}
+            {% if entry["type"]=="multi_select" %}
+            <div class="form-group" style="display:none" id={{ entry["div_id"] }}>
+                {{ entry["id"] }}
+                <script>
+                    $(document).ready(function() {
+                        $('#{{ entry["id"] }}').multiselect({
+                            includeResetOption: true,
+                            enableFiltering: true,
+                        });
+                    });
+                </script>
+                <select id={{ entry["id"] }} name={{ entry["id"] }} multiple="multiple">
+                    {% for sel in entry["data"] %}
+                    <option value={{ sel["value"] }}>{{ sel["label"] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+            {% if entry["type"]=="range_number" %}
+            <div class="form-group" style="display:none" id={{ entry["div_id"] }}>
+              {{ entry["id"] }}
+              From:<input id={{ entry["id"] }} name={{ entry["id"] }}_from type="text"> To:<input id={{ entry["id"] }} name={{ entry["id"] }}_to type="text">
+            </div>
+            {% endif %}
+            {% if entry["type"]=="sample" %}
+            <div class="form-group" style="display:none" id={{ entry["div_id"] }}>
+            {{ entry["id"] }}
+                <select id={{ entry["id"] }} name={{ entry["id"] }}>
+                    <option value=''>Select...</option>
+                    {% for key, value in sfos.items() %}
+                        <option value={{ key }}>{{ value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+        {% endfor %}
+        <button type="submit" class="btn btn-primary" style="margin: auto; display: block;">Submit</button>
+    </form>
+    <hr>
+</div>
+<div class="row">
+   <div class="col-lg-12">
+      <table id="var_table" class="table table-striped">
+        <thead>
+            <tr>
+            {% for col in db_cols %}
+                <th>{{ col }}</th>
+            {% endfor %}
+            </tr>
+        </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function () {
+      var table = $('#var_table').DataTable({
+        "processing": false,
+        "serverSide": true,
+        "ajax": "{{ url_for('data') }}",
+        "pageLength": 100,
+        "dom": 'Brtip',
+        buttons: [
+            {
+                extend: 'csvHtml5',
+                title: 'Pquery_export'
+            }
+        ]
+     });
+   });
+</script>
+{% endblock %}

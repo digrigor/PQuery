@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<div class = "container">
+    <form action="/igv" method="POST" enctype="multipart/form-data">
+        <div class="form-group" id="igv_samples_selector">
+            <script>
+                $(document).ready(function() {
+                    $('#igv_samples').multiselect({
+                        includeResetOption: true,
+                        enableFiltering: true
+                    });
+                });
+            </script>
+            <p>Select the Samples you would like to check IGV for:</p>
+            <select id="igv_samples" name="igv_samples" multiple="multiple">
+                {% for samp in igv_sams %}
+                <option value={{ samp }}>{{ samp }}</option>
+                {% endfor %}
+            </select>
+            <p>And then click Submit:</p>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+
+    </form>
+
+<div id="myDiv" style="padding-top: 50px;padding-bottom: 20px; height: auto"></div>
+
+<script type="text/javascript">
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    var div = document.getElementById("myDiv");
+
+    igv
+            .createBrowser(div, {
+                genome: "hg19",
+                locus: "chr3:189,455,506-189,455,675",
+                tracks: JSON.parse('{{ igv_dict|tojson|safe }}'),
+                queryParametersSupported: true,
+                promisified: true
+            })
+            .then(function (browser) {
+                console.log("Browser ready");
+            })
+
+
+})
+
+
+</script>
+</div>
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+                {% for msg in message %}
+                <span>{{ msg }}</span><br>
+                {% endfor %}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+    <a href="/">
+        <div class="img-container1 img-responsive"><img src="static/pquery_logo-03.png" href="/" style="width:20%; height: 20%; text-align: center; " alt=""></div>
+    </a>
+    <p><b>PQuery</b> is an application developed by the <b>Genetics Centre</b> of St George's University of London
+        for fast and efficient interpretation of the Lymphoedema and Lipoedema Whole Exome Sequencing Data Inventory
+        consisting of more than 250 samples.</p>
+    <form action="/index" method="POST" enctype="multipart/form-data">
+        <div class="row">
+            <h4 style="text-align:center">Samples Selection</h4>
+            <section class="col col-sm-3" style="width: 20%; text-align:center">
+                <h5 style="text-align:center">Select Sample</h5>
+                <div class="form-group">
+                    <select id="samples-drop-sa" name="samples-drop-sa" multiple="multiple">
+                        {% for sample in samplenames_list %}
+                        <option value={{ sample }}>{{ sample }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </section>
+            <section class="col col-sm-3 align-self-center" style="width: 20%; text-align:center">
+                <h4><br></h4>
+                <h4>OR</h4>
+            </section>
+            <section class="col col-sm-3" style="width: 20%; text-align:center">
+                <h5 style="text-align:center">Select Cohort</h5>
+                <div class="form-group">
+                    <select name="samples-drop-co" id="samples-drop-co" multiple="multiple">
+                        {% for key, value in cohorts_dict.items() %}
+                        <option value={{ value }}>{{ key }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </section>
+            <section class="col col-sm-3 align-self-center" style="width: 20%; text-align:center; ">
+                <h4><br></h4>
+                <h4>OR</h4>
+            </section>
+            <section class="col col-sm-3" style="width: 20%; text-align:center">
+                <h5 style="text-align:center">Upload CSV file</h5>
+                <div class="form-group">
+                    <label class="btn btn-primary">
+                        Browse&hellip; <input type="file" style="display: none;" name="samples-upload" id="samples-upload">
+                    </label><br>
+                    <button type="button" class="btn btn-secondary" trigger="click" data-toggle="tooltip" data-placement="bottom"
+                            title="Upload a CSV file with one sample ID per line."
+                            style="background-color: transparent; font-size: 10px; height: 5px; width: 85px; line-height: 4px">Info</button>
+                </div>
+            </section>
+        </div>
+        <hr>
+        <div class="row">
+            <h4 style="text-align:center">Genomic Region Selection</h4>
+            <section class="col col-sm-3" style="width: 20%; text-align:center">
+                <h5 style="text-align:center">Select Genomic Region</h5>
+                <div class="form-group">
+                    <select id="genes-drop-gr" name="genes-drop-gr" multiple="multiple">
+                        <option value='all'>Whole Exome</option>
+                        {% for key, value in genregs_list.items() %}
+                        <option value={{ key }}>{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </section>
+            <section class="col col-sm-3 align-self-center" style="width: 20%; text-align:center">
+                <h4><br></h4>
+                <h4>OR</h4>
+            </section>
+            <section class="col col-sm-3" style="width: 20%; text-align:center">
+                <h5 style="text-align:center">Enter Gene Name or Genomic Coordinates</h5>
+                <div class="form-group">
+                    <input id="genes-text-in" name="genes-text-in" class="form-control form-control-lg"
+                           type="text" placeholder="EZH2,ENG00000012,chr5:10000-20000">
+                    <button type="button" class="btn btn-secondary" trigger="click" data-toggle="tooltip" data-placement="bottom"
+                           title="Here you can enter one or more entries from the following types (To enter multiple entries, comma-separate):
+                           - HGNC Gene Symbol (e.g. TP63)
+                           - Ensembl Gene ID
+                           - Genomic Coordincates (hg19) in the form of chrN:start-end (e.g. chr4:1200000-1300000)."
+                           style="background-color: transparent; font-size: 10px; height: 5px; width: 85px; line-height: 4px">Info</button>
+                </div>
+            </section>
+            <section class="col col-sm-3 align-self-center" style="width: 20%; text-align:center; ">
+                <h4><br></h4>
+                <h4>OR</h4>
+            </section>
+            <section class="col col-sm-3" style="width: 20%; text-align:center">
+                <h5 style="text-align:center">Upload CSV file</h5>
+                <div class="form-group">
+                    <label class="btn btn-primary">Browse&hellip;
+                        <input type="file" style="display: none;" name="genes-upload" id="genes-upload">
+                    </label><br>
+                    <button type="button" class="btn btn-secondary" trigger="click" data-toggle="tooltip" data-placement="bottom"
+                            title="Upload a CSV file with one entry per line. Each entry can be: HGNC Gene Symbol, Ensembl Gene ID, Genomic Coordinates (hg19)."
+                            style="background-color: transparent; font-size: 10px; height: 5px; width: 85px; line-height: 4px">Info</button>
+                </div>
+            </section>
+        </div>
+        <hr>
+        <div class="row" hidden>
+            <h4 style="text-align:center; margin: 0px">Filters</h4>
+            <button type="button" class="btn btn-secondary" trigger="click" data-toggle="tooltip" data-placement="bottom"
+                title="Pick values for one or more of the Allele Frequency filters below and variants with AF that is LESS OR EQUAL to the selected ones will be RETURNED"
+                style="background-color: transparent; font-size: 10px; height: 35px; width: 85px; margin: auto; display: block; line-height: 4px;">Info</button>
+            <section class="col col-sm-3 align-self-center" style="width: 33.33%; text-align:center; ">
+                <h5 style="text-align:center">gnomAD Exome AF Filter</h5>
+                <div class="form-group">
+                    <select id="filt-gnex-drop" name="filt-gnex-drop">
+                        {% for key, value in slider_vals.items() %}
+                        <option value={{ value }}>{{ key }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </section>
+            <section class="col col-sm-3 align-self-center" style="width: 33.33%; text-align:center; ">
+                <h5 style="text-align:center">gnomAD Genome AF Filter</h5>
+                <div class="form-group">
+                    <select id="filt-gnge-drop" name="filt-gnge-drop">
+                        {% for key, value in slider_vals.items() %}
+                        <option value={{ value }}>{{ key }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </section>
+            <section class="col col-sm-3 align-self-center" style="width: 33.33%; text-align:center; ">
+                <h5 style="text-align:center">SGUL Exomes AF Filter</h5>
+                <div class="form-group">
+                    <select id="filt-sgex-drop" name="filt-sgex-drop">
+                        {% for key, value in slider_vals.items() %}
+                        <option value={{ value }}>{{ key }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </section>
+        </div>
+        <hr>
+        <button type="submit" class="btn btn-primary" style="margin: auto; display: block;">Submit</button>
+    </form>
+</div>
+
+
+
+{% endblock %}
