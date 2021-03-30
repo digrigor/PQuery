@@ -1,1 +1,1 @@
-# <img src="app/static/pquery_logo-03_crop.png" width="400">
+# <img src="app/static/pquery_logo-03.png" width="400">
