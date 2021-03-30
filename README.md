@@ -23,3 +23,13 @@ Double-click the PQuery.bat file or the PQuery.lnk shortcup (you can copy the sh
 
 ## How to Guide
 Read more in the [PQuery Manual](./PQuery_Manual.pdf)
+
+# Preprocess an annotated VCF file so you can use in PQuery
+Check the preprocessing directory.
+
+# Further Information
+- PQuery is currently operating on POlab hg19 data.
+
+To do:
+- Update the DB with the latest hg38 data.
+- Update the back-end DB so can be faster. This scheme used right now (VCFdbR) is currently slow for querying whole exome for many samples. The major limitation is the time needed to calculate on-the-fly AC,AN and AF (Allele Count, Allele Number, Allele Frequency) for the queried cohort of samples and then filter these numbers to only include variants which have at least ONE alternative allele in at least ONE queried sample-set.
