@@ -18,11 +18,7 @@ From a linux machine:
 sh run_app.sh
 ```
 
-From a Windows machine:
+From a Windows machine:  
 Double-click the PQuery.bat file or the PQuery.lnk shortcup (you can copy the shortcut to your Desktop).
 
-<object data="PQuery_Manual.pdf" type="application/pdf" width="700px" height="700px">
-    <embed src="PQuery_Manual.pdf">
-        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="PQuery_Manual.pdf">Download PDF</a>.</p>
-    </embed>
-</object>
+
